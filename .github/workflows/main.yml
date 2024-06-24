@@ -1,0 +1,35 @@
+name: Process PDF
+
+on:
+  workflow_dispatch:
+
+jobs:
+  process_pdf:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'  # Utiliser Python 3.11
+
+    - name: Install marker-pdf
+      run: |
+        pip install marker-pdf
+
+    - name: Create output directory
+      run: |
+        mkdir -p output
+
+    - name: Process PDF
+      run: |
+        marker_single file.pdf output --batch_multiplier 2 --max_pages 130 --langs German
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: processed-pdf
+        path: output/
